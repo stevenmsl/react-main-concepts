@@ -7,6 +7,54 @@ const App: React.FC = () => {
   return <div className="App"></div>;
 };
 
+/* state and lifecycle */
+
+/*
+class Clock extends React.Component<{}, { date: Date }> {
+  timerID: number = 0;
+  constructor(props: {}) {
+    super(props);
+    this.state = { date: new Date() };
+  }
+
+  //runs after the component output has been rendered to the DOM
+  componentDidMount() {
+    //this.timerID  = setInterval((() => this.tick()) as TimerHandler, 1000);
+    this.timerID = window.setInterval(() => this.tick(), 1000);
+  }
+
+  //if the Clock component is ever removed from the DOM,
+  //React calls the componentWillUnmount() lifecycle method so the timer is stopped.
+  componentWillUnmount() {
+    window.clearInterval(this.timerID);
+  }
+
+  tick() {
+    this.setState({
+      date: new Date()
+    });
+  }
+
+  render() {
+    return (
+      <div>
+        <h1>Hello, world!</h1>
+        <h2>It is {this.state.date.toLocaleTimeString()}.</h2>
+      </div>
+    );
+  }
+}
+
+const App: React.FC = () => {
+  console.log("Type Script!");
+  return (
+    <div className="App">
+      <Clock />
+    </div>
+  );
+};
+*/
+
 /* components and props - extracting components */
 /*
 //split components into smaller components.
