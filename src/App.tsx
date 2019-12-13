@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment } from "react";
 //import logo from "./logo.svg";
 import "./App.css";
 
@@ -6,6 +6,76 @@ const App: React.FC = () => {
   console.log("Type Script!");
   return <div className="App"></div>;
 };
+
+/* handling events */
+/*
+class Toggle extends React.Component<{}, { isToggleON: boolean }> {
+  constructor(props: {}) {
+    super(props);
+    this.state = { isToggleON: true };
+    // This binding is necessary to make `this` work in the callback
+    this.handleClick = this.handleClick.bind(this);
+  }
+  //this is a common pattern for an event handler to be a method on the class.
+  //in JavaScript, class methods are not bound by default.
+  handleClick() {
+    this.setState(state => ({
+      isToggleON: !state.isToggleON
+    }));
+  }
+  render() {
+    return (
+      <button onClick={this.handleClick}>
+        {this.state.isToggleON ? "ON" : "OFF"}
+      </button>
+    );
+  }
+}
+
+class LoggingButton extends React.Component {
+  // this syntax ensures `this` is bound within handleClick.
+  // warning: this is *experimental* syntax.
+  // define an event handler as a class field
+  handleClick = () => {
+    console.log("this is:", this);
+  };
+
+  render() {
+    return <button onClick={this.handleClick}>Click me</button>;
+  }
+}
+
+class LoggingButton2 extends React.Component {
+  handleClick() {
+    console.log("this is:", this);
+  }
+
+  render() {
+    this.handleClick(); // this: LoggingButton2
+    // use arrow function to get ‘this’ to work
+    // drawback: a different callback is created each time the LoggingButton renders
+    return (
+      <Fragment>
+        <button onClick={this.handleClick}>Click me (Undefined) </button>
+        <button onClick={e => this.handleClick()}>
+          Click me (LoggingButton2)
+        </button>
+      </Fragment>
+    );
+  }
+}
+
+const App: React.FC = () => {
+  console.log("Type Script!");
+  return (
+    <div className="App">
+      <Toggle />
+      <LoggingButton />
+      <LoggingButton2 />
+    </div>
+  );
+};
+*/
 
 /* state and lifecycle */
 
