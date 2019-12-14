@@ -2,9 +2,31 @@ import React, { Fragment } from "react";
 //import logo from "./logo.svg";
 import "./App.css";
 
+/* Conditional rendering  */
+
+function UserGreeting() {
+  return <h1>Welcome back!</h1>;
+}
+
+function GuestGreeting() {
+  return <h1>Please sign up.</h1>;
+}
+
+function Greeting(props: { isLoggedIn: boolean }) {
+  const isLoggedIn = props.isLoggedIn;
+  if (isLoggedIn) {
+    return <UserGreeting />;
+  }
+  return <GuestGreeting />;
+}
+
 const App: React.FC = () => {
   console.log("Type Script!");
-  return <div className="App"></div>;
+  return (
+    <div className="App">
+      <Greeting isLoggedIn={false} />
+    </div>
+  );
 };
 
 /* handling events */
