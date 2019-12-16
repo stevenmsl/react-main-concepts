@@ -6,6 +6,51 @@ const App: React.FC = () => {
   return <div className="App"></div>;
 };
 
+/* Conditional rendering - Preventing Component from Rendering */
+
+/*
+function WarningBanner(props: { warn: boolean }) {
+  if (!props.warn) {
+    //returning null from a component’s render method does not
+    //affect the firing of the component’s lifecycle methods.
+    return null; //you want a component to hide itself even though it was rendered by another component
+  }
+  return <div className="warning">Warning!</div>;
+}
+
+class Page extends React.Component<{}, { showWarning: boolean }> {
+  constructor(props: {}) {
+    super(props);
+    this.state = { showWarning: true };
+    this.handleToggleClick = this.handleToggleClick.bind(this);
+  }
+  handleToggleClick() {
+    this.setState(state => ({
+      showWarning: !state.showWarning
+    }));
+  }
+
+  render() {
+    return (
+      <div>
+        <WarningBanner warn={this.state.showWarning} />
+        <button onClick={this.handleToggleClick}>
+          {this.state.showWarning ? "Hide" : "Show"}
+        </button>
+      </div>
+    );
+  }
+}
+
+const App: React.FC = () => {
+  return (
+    <div className="App">
+      <Page />
+    </div>
+  );
+};
+*/
+
 /* Conditional rendering - Inline If with Logical && Operator */
 
 /*
