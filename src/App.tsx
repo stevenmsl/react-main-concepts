@@ -2,8 +2,40 @@ import React, { Fragment } from "react";
 //import logo from "./logo.svg";
 import "./App.css";
 
+const App: React.FC = () => {
+  return <div className="App"></div>;
+};
+
+/* Conditional rendering - Inline If with Logical && Operator */
+
+/*
+function Mailbox(props: { unreadMessages: string[] }) {
+  const unreadMessages = props.unreadMessages;
+  //true && expression always evaluates to expression,
+  //and false && expression always evaluates to false.
+  return (
+    <div>
+      <h1>Hello!</h1>
+      {unreadMessages.length > 0 && (
+        <h2>you have {unreadMessages.length} unread messages.</h2>
+      )}
+    </div>
+  );
+}
+const messages = ["React", "Re: React", "Re:Re: React"];
+
+const App: React.FC = () => {
+  return (
+    <div className="App">
+      <Mailbox unreadMessages={messages} />
+    </div>
+  );
+};
+*/
+
 /* Conditional rendering  */
 
+/*
 function UserGreeting() {
   return <h1>Welcome back!</h1>;
 }
@@ -68,6 +100,7 @@ const App: React.FC = () => {
     </div>
   );
 };
+*/
 
 /* handling events */
 /*
