@@ -6,6 +6,50 @@ const App: React.FC = () => {
   return <div className="App"></div>;
 };
 
+/* Lists and Keys - Keys Must Only Be Unique Among Siblings */
+/*
+function Blog(props: {
+  posts: { id: number; title: string; content: string }[];
+}) {
+  // Keys used within arrays should be unique among their siblings.
+  // However they don’t need to be globally unique.
+  // We can use the same keys when we produce two different arrays.
+
+  const sidebar = (
+    <ul>
+      {props.posts.map(post => (
+        <li key={post.id}>{post.title}</li>
+      ))}
+    </ul>
+  );
+  const content = props.posts.map(post => (
+    <div key={post.id}>
+      <h3>{post.title}</h3>
+      <p>{post.content}</p>
+    </div>
+  ));
+  return (
+    <div>
+      {sidebar}
+      <hr />
+      {content}
+    </div>
+  );
+}
+const posts = [
+  { id: 1, title: "Hello World", content: "Welcome to learning React!" },
+  { id: 2, title: "Installation", content: "You can install React from npm." }
+];
+
+const App: React.FC = () => {
+  return (
+    <div className="App">
+      <Blog posts={posts} />
+    </div>
+  );
+};
+*/
+
 /* Lists and Keys - correct key usage  */
 
 /*
