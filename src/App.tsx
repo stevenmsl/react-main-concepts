@@ -6,6 +6,53 @@ const App: React.FC = () => {
   return <div className="App"></div>;
 };
 
+/* Forms – select tag */
+
+/*
+class FlavorForm extends React.Component<{}, { value: string }> {
+  constructor(props: {}) {
+    super(props);
+    this.state = { value: "coconut" };
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  //use ChangeEvent not SyntheticEvent so you have access to target.value
+  handleChange(event: React.ChangeEvent<HTMLSelectElement>) {
+    this.setState({ value: event.target.value });
+  }
+
+  handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    alert(`Your favorite flavor is: ${this.state.value}`);
+    event.preventDefault();
+  }
+  render() {
+    return (
+      <form onSubmit={this.handleSubmit}>
+        <label>
+          Pick your favorite flavor:
+          <select value={this.state.value} onChange={this.handleChange}>
+            <option value="grapefruit">Grapefruit</option>
+            <option value="lime">Lime</option>
+            <option value="coconut">Coconut</option>
+            <option value="mango">Mango</option>
+          </select>
+        </label>
+        <input type="submit" value="Submit" />
+      </form>
+    );
+  }
+}
+
+const App: React.FC = () => {
+  return (
+    <div className="App">
+      <FlavorForm />
+    </div>
+  );
+};
+*/
+
 /* Forms – Controlled Components */
 
 /*
