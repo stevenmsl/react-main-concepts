@@ -6,6 +6,56 @@ const App: React.FC = () => {
   return <div className="App"></div>;
 };
 
+/* Forms – Controlled Components */
+
+/*
+class NameForm extends React.Component<{}, { value: string }> {
+  constructor(props: {}) {
+    super(props);
+    this.state = { value: "" };
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  handleChange(event: any) {
+    this.setState({ value: event.target.value });
+  }
+  handleSubmit(event: any) {
+    alert("A name was submitted: " + this.state.value);
+    //console.log("A name was submitted: " + this.state.value);
+    event.preventDefault();
+  }
+  render() {
+    // Since the value attribute is set on our form element,
+    // the displayed value will always be this.state.value,
+    // making the React state the source of truth.
+    // Since handleChange runs on every keystroke to update the React state,
+    // the displayed value will update as the user types.
+    return (
+      <form onSubmit={this.handleSubmit}>
+        <label>
+          Name:
+          <input
+            type="text"
+            value={this.state.value}
+            onChange={this.handleChange}
+          />
+        </label>
+        <input type="submit" value="Submit" />
+      </form>
+    );
+  }
+}
+
+const App: React.FC = () => {
+  return (
+    <div className="App">
+      <NameForm />
+    </div>
+  );
+};
+*/
+
 /* Lists and Keys - Keys Must Only Be Unique Among Siblings */
 /*
 function Blog(props: {
