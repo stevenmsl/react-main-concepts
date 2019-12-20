@@ -6,6 +6,45 @@ const App: React.FC = () => {
   return <div className="App"></div>;
 };
 
+/*  Lifting State Up - 1 */
+/*
+function BoilingVerdict(props: { celsius: number }) {
+  if (props.celsius >= 100) {
+    return <p>The water would boil.</p>;
+  }
+  return <p>The water would not boil</p>;
+}
+
+class Calculator extends React.Component<{}, { temperature: string }> {
+  constructor(props: {}) {
+    super(props);
+    this.handleChange = this.handleChange.bind(this);
+    this.state = { temperature: "" };
+  }
+  handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+    this.setState({ temperature: e.target.value });
+  }
+  render() {
+    const temperature = this.state.temperature;
+    return (
+      <fieldset>
+        <legend>Enter tempature in Celsius:</legend>
+        <input value={temperature} onChange={this.handleChange} />
+        <BoilingVerdict celsius={parseFloat(temperature)} />
+      </fieldset>
+    );
+  }
+}
+
+const App: React.FC = () => {
+  return (
+    <div className="App">
+      <Calculator />
+    </div>
+  );
+};
+*/
+
 /* Forms – Handling Multiple Inputs */
 /*
 class Reservation extends React.Component<{}, any> {
