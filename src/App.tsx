@@ -2,9 +2,136 @@ import React, { Fragment } from "react";
 //import logo from "./logo.svg";
 import "./App.css";
 
-const App: React.FC = () => {
-  return <div className="App"></div>;
+/*  Lifting State Up - components in sync  */
+
+function toCelsius(fahrenheit: number) {
+  return ((fahrenheit - 32) * 5) / 9;
+}
+
+function toFahrenheit(celsisu: number) {
+  return (celsisu * 9) / 5 + 32;
+}
+
+function tryConvert(tempature: string, convert: (temp: number) => number) {
+  const input = parseFloat(tempature);
+  if (Number.isNaN(input)) {
+    return "";
+  }
+  const output = convert(input);
+  const rounded = Math.round(output * 1000) / 1000;
+  return rounded.toString();
+}
+
+const scaleNames = {
+  c: "Celsius",
+  f: "Fahrenheit"
 };
+type scaleKeyType = keyof typeof scaleNames; // "c" | "f"
+
+class TemperatureInput extends React.Component<
+  {
+    scale: scaleKeyType;
+  },
+  { temperature: string }
+> {
+  constructor(props: { scale: any }) {
+    super(props);
+    this.handleChange = this.handleChange.bind(this);
+    this.state = { temperature: "" };
+  }
+
+  handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+    this.setState({ temperature: e.target.value });
+  }
+
+  render() {
+    const tempature = this.state.temperature;
+    const scale = this.props.scale;
+    return (
+      <fieldset>
+        <legend>Enter temperature in {scaleNames[scale]}</legend>
+        <input value={tempature} onChange={this.handleChange} />
+      </fieldset>
+    );
+  }
+}
+
+class Calculator extends React.Component {
+  render() {
+    return (
+      <div>
+        <TemperatureInput scale="c" />
+        <TemperatureInput scale="f" />
+      </div>
+    );
+  }
+}
+
+const App: React.FC = () => {
+  return (
+    <div className="App">
+      <Calculator />
+    </div>
+  );
+};
+
+/*  Lifting State Up - components not in sync  */
+
+/*
+const scaleNames = {
+  c: "Celsius",
+  f: "Fahrenheit"
+};
+
+type scaleKeyType = keyof typeof scaleNames; // "c" | "f"
+
+class TemperatureInput extends React.Component<
+  {
+    scale: scaleKeyType;
+  },
+  { temperature: string }
+> {
+  constructor(props: { scale: any }) {
+    super(props);
+    this.handleChange = this.handleChange.bind(this);
+    this.state = { temperature: "" };
+  }
+
+  handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+    this.setState({ temperature: e.target.value });
+  }
+
+  render() {
+    const tempature = this.state.temperature;
+    const scale = this.props.scale;
+    return (
+      <fieldset>
+        <legend>Enter temperature in {scaleNames[scale]}</legend>
+        <input value={tempature} onChange={this.handleChange} />
+      </fieldset>
+    );
+  }
+}
+
+class Calculator extends React.Component {
+  render() {
+    return (
+      <div>
+        <TemperatureInput scale="c" />
+        <TemperatureInput scale="f" />
+      </div>
+    );
+  }
+}
+
+const App: React.FC = () => {
+  return (
+    <div className="App">
+      <Calculator />
+    </div>
+  );
+};
+*/
 
 /*  Lifting State Up - 1 */
 /*
