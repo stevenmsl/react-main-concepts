@@ -26,27 +26,40 @@ const scaleNames = {
   c: "Celsius",
   f: "Fahrenheit"
 };
-type scaleKeyType = keyof typeof scaleNames; // "c" | "f"
 
-class TemperatureInput extends React.Component<
-  {
-    scale: scaleKeyType;
-  },
-  { temperature: string }
-> {
-  constructor(props: { scale: any }) {
+type scaleKeyType = keyof typeof scaleNames; // "c" | "f"
+type TemperatureInputPropType = {
+  scale: scaleKeyType;
+  temperature: string;
+  onTemperatureChange: (temp: string) => void;
+};
+
+class TemperatureInput extends React.Component<TemperatureInputPropType, {}> {
+  constructor(props: TemperatureInputPropType) {
+    // lifting state up: sharing state is accomplished
+    // by moving it up to the closest common ancestor of
+    // the components that need it.
+    // Remove the local state from the TemperatureInput
+    // and move it into the Calculator instead.
     super(props);
     this.handleChange = this.handleChange.bind(this);
-    this.state = { temperature: "" };
   }
 
   handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-    this.setState({ temperature: e.target.value });
+    // - now that the temperature is coming from the parent as a prop,
+    //   the TemperatureInput has no control over it:
+    //   When the TemperatureInput wants to update its temperature,
+    //   it calls this.props.onTemperatureChange:
+    this.props.onTemperatureChange(e.target.value);
   }
 
   render() {
-    const tempature = this.state.temperature;
+    // - replace this.state.temperature with this.props.temperature
+
+    const tempature = this.props.temperature;
     const scale = this.props.scale;
+    // TemperatureInput accept both temperature
+    // and onTemperatureChange props from its parent Calculator.
     return (
       <fieldset>
         <legend>Enter temperature in {scaleNames[scale]}</legend>
@@ -56,12 +69,64 @@ class TemperatureInput extends React.Component<
   }
 }
 
-class Calculator extends React.Component {
+function BoilingVerdict(props: { celsius: number }) {
+  if (props.celsius >= 100) {
+    return <p>The water would boil.</p>;
+  }
+  return <p>The water would not boil</p>;
+}
+
+type CalculatorStateType = {
+  scale: scaleKeyType;
+  temperature: string;
+};
+
+class Calculator extends React.Component<{}, CalculatorStateType> {
+  constructor(props: {}) {
+    super(props);
+    this.handleCelsiusChange = this.handleCelsiusChange.bind(this);
+    this.handleFahrenheitChange = this.handleCelsiusChange.bind(this);
+    // Calculator owns the shared state,
+    // it becomes the “source of truth”
+    // for the current temperature in both inputs
+    this.state = { temperature: "", scale: "c" };
+  }
+
+  handleCelsiusChange(temperature: string) {
+    // Calculator component asks React to re-render itself
+    // by calling this.setState()
+    this.setState({ scale: "c", temperature });
+  }
+  handleFahrenheitChange(temperature: string) {
+    this.setState({ scale: "f", temperature });
+  }
+
+  // React calls the Calculator component’s render method to learn
+  // what the UI should look like after the local state changed
   render() {
+    const scale = this.state.scale;
+    const temperature = this.state.temperature;
+    const celsius =
+      scale === "f" ? tryConvert(temperature, toCelsius) : temperature;
+    const fahrenheit =
+      scale === "c" ? tryConvert(temperature, toFahrenheit) : temperature;
+
+    // React calls the render methods of the individual TemperatureInput
+    // components with their new props specified by the Calculator.
+    // It learns what their UI should look like.
     return (
       <div>
-        <TemperatureInput scale="c" />
-        <TemperatureInput scale="f" />
+        <TemperatureInput
+          scale="c"
+          temperature={celsius}
+          onTemperatureChange={this.handleCelsiusChange}
+        />
+        <TemperatureInput
+          scale="f"
+          temperature={fahrenheit}
+          onTemperatureChange={this.handleFahrenheitChange}
+        />
+        <BoilingVerdict celsius={parseFloat(celsius)} />
       </div>
     );
   }
