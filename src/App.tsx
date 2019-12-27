@@ -2,8 +2,84 @@ import React, { Fragment } from "react";
 //import logo from "./logo.svg";
 import "./App.css";
 
+const App: React.FC = () => {
+  return <div className="App"></div>;
+};
+
+/* Composition vs Inheritance - Containment 2 */
+/*
+function Contacts() {
+  return (
+    <div className="Contacts">
+      <p>Contacts</p>
+    </div>
+  );
+}
+
+function Chat() {
+  return (
+    <div className="Chat">
+      <p>Chat</p>
+    </div>
+  );
+}
+
+type SplitPanePropsType = {
+  left?: React.ReactNode;
+  right?: React.ReactNode;
+};
+
+const SplitPane: React.FunctionComponent<SplitPanePropsType> = props => (
+  <div className="SplitPane">
+    <p>SplitPane</p>
+    <div className="SplitPane-left">{props.left}</div>
+    <div className="SplitPane-right">{props.right}</div>
+  </div>
+);
+
+const App: React.FC = () => {
+  return (
+    <div className="App">
+      <SplitPane left={<Contacts />} right={<Chat />}></SplitPane>
+    </div>
+  );
+};
+*/
+/* Composition vs Inheritance - Containment 1 */
+/*
+type FancyBorderProps = {
+  color: string;
+};
+
+const FancyBorder: React.FunctionComponent<FancyBorderProps> = props => (
+  <div className={"FancyBorder FancyBorder-" + props.color}>
+    {props.children}
+  </div>
+);
+
+function WelcomeDialog() {
+  //Anything inside the <FancyBorder> JSX tag
+  //gets passed into the FancyBorder component as a children prop.
+  return (
+    <FancyBorder color="blue">
+      <h1 className="Dialog-title">Welcome</h1>
+      <p className="Dialog-message">Thank you for visiting our spacecraft!</p>
+    </FancyBorder>
+  );
+}
+
+const App: React.FC = () => {
+  return (
+    <div className="App">
+      <WelcomeDialog />
+    </div>
+  );
+};
+*/
+
 /*  Lifting State Up - components in sync  */
 
+/*
 function toCelsius(fahrenheit: number) {
   return ((fahrenheit - 32) * 5) / 9;
 }
@@ -139,6 +215,7 @@ const App: React.FC = () => {
     </div>
   );
 };
+*/
 
 /*  Lifting State Up - components not in sync  */
 
