@@ -2,6 +2,8 @@ import React, { Fragment } from "react";
 //import logo from "./logo.svg";
 import "./App.css";
 
+/* Higher Order Component (HOC) – Injectors */
+// https://www.typescriptlang.org/docs/handbook/utility-types.html#excludetu
 const App: React.FC = () => {
   return <div className="App"></div>;
 };
