@@ -2,11 +2,99 @@ import React, { Fragment } from "react";
 //import logo from "./logo.svg";
 import "./App.css";
 
-/* Higher Order Component (HOC) – Injectors */
-// https://www.typescriptlang.org/docs/handbook/utility-types.html#excludetu
 const App: React.FC = () => {
+  const divStyle: React.CSSProperties = {
+    backgroundColor: "rgba(255, 255, 255, 0.85)"
+  };
   return <div className="App"></div>;
 };
+
+/* Higher Order Component (HOC) – Injectors */
+
+/*
+//the props that will be injected into the (wrapped) component
+interface InjectedCounterProps {
+  value: number;
+  onIncrement(): void;
+  onDecrement(): void;
+}
+
+interface MakeCounterState {
+  value: number;
+}
+
+const makeCounter = <P extends InjectedCounterProps>(
+  Component: React.ComponentType<P>
+) =>
+  // Exclude is essentially: type Exclude<T, U> = T extends U ? never : T
+  // So in our case since P extends InjectedCounterProps the return type will be never
+  // Exclude<P, InjectedCounterProps> will return never
+  // Exclude is really intended for removing branches from a union type.
+  // For example Exclude<string|null|void, null|void> ⇒ string,
+  // or for excluding elements from a keyof type
+  //
+  // https://www.typescriptlang.org/docs/handbook/utility-types.html#excludetu
+
+  class MakeCounter extends React.Component<
+    Pick<P, Exclude<keyof P, keyof InjectedCounterProps>>,
+    MakeCounterState
+  > {
+    state: MakeCounterState = {
+      value: 0
+    };
+
+    increment = () => {
+      this.setState(prevState => ({
+        value: prevState.value + 1
+      }));
+    };
+
+    decrement = () => {
+      this.setState(prevState => ({
+        value: prevState.value - 1
+      }));
+    };
+
+    render() {
+      return (
+        <Component
+          {...(this.props as P)}
+          value={this.state.value}
+          onIncrement={this.increment}
+          onDecrement={this.decrement}
+        />
+      );
+    }
+  };
+
+//The component to be wrapped by the HOC
+interface CounterProps extends InjectedCounterProps {
+  style: React.CSSProperties;
+}
+
+type testType = Exclude<CounterProps, InjectedCounterProps>;
+
+const Counter = (props: CounterProps) => (
+  <div style={props.style}>
+    <button onClick={props.onDecrement}> - </button>
+    {props.value}
+    <button onClick={props.onIncrement}> + </button>
+  </div>
+);
+
+const MyCounter = makeCounter(Counter);
+
+const App: React.FC = () => {
+  const divStyle: React.CSSProperties = {
+    backgroundColor: "rgba(255, 255, 255, 0.85)"
+  };
+  return (
+    <div className="App">
+      <MyCounter style={divStyle} />
+    </div>
+  );
+};
+*/
 
 /* Higher Order Component (HOC) – Enhancers */
 /*
