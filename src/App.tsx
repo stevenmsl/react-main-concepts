@@ -6,6 +6,63 @@ const App: React.FC = () => {
   return <div className="App"></div>;
 };
 
+/* Higher Order Component (HOC) – Enhancers */
+/*
+function LoadingSpinner() {
+  return (
+    <div>
+      <p>Loading...</p>
+    </div>
+  );
+}
+
+//props that will be added to the component when it is wrapped
+interface WithLoadingProps {
+  loading: boolean;
+}
+
+// P represents the props of the component that is passed into the HOC
+// React.ComponentType<P> is an alias of React.FunctionComponent<P>|React.ClassComponent<P>
+const withLoading = <P extends object>(Component: React.ComponentType<P>) =>
+  class WithLoading extends React.Component<P & WithLoadingProps> {
+    render() {
+      const { loading, ...props } = this.props;
+      // A type cast (props as P) is required from TypeScript v3.2 onwards
+      return loading ? <LoadingSpinner /> : <Component {...(props as P)} />;
+    }
+  };
+
+interface WelcomePropsType {
+  name?: string;
+}
+
+class Welcome extends React.Component<WelcomePropsType> {
+  constructor(props: WelcomePropsType) {
+    super(props);
+  }
+
+  render() {
+    const { name } = this.props;
+    return (
+      <div>
+        <p>Welcome {name}!</p>
+      </div>
+    );
+  }
+}
+
+const WelcomeWithLoading = withLoading<WelcomePropsType>(Welcome);
+
+const App: React.FC = () => {
+  return (
+    <div className="App">
+      <WelcomeWithLoading loading={true}> </WelcomeWithLoading>
+      <WelcomeWithLoading loading={false} name={"Steven"} />
+    </div>
+  );
+};
+*/
+
 /* Composition vs Inheritance - Containment 2 */
 /*
 function Contacts() {
