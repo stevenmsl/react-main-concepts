@@ -9,10 +9,101 @@ const App: React.FC = () => {
   return <div className="App"></div>;
 };
 
+/* Higher Order Component (HOC) – Enhance + Inject */
+/*
+interface InjectedCounterProps {
+  value: number;
+  onIncrement(): void;
+  onDecrement(): void;
+}
+
+interface MakeCounterProps {
+  minValue?: number;
+  maxValue?: number;
+}
+
+interface MakeCounterState {
+  value: number;
+}
+
+const makeCounter = <P extends InjectedCounterProps>(
+  Component: React.ComponentType<P>
+) =>
+  class MakeCounter extends React.Component<
+    Pick<P, Exclude<keyof P, keyof InjectedCounterProps>> & MakeCounterProps,
+    MakeCounterState
+  > {
+    state: MakeCounterState = {
+      value: 0
+    };
+
+    increment = () => {
+      this.setState(prevState => ({
+        value:
+          prevState.value === this.props.maxValue
+            ? prevState.value
+            : prevState.value + 1
+      }));
+    };
+
+    decrement = () => {
+      this.setState(prevState => ({
+        value:
+          prevState.value === this.props.minValue
+            ? prevState.value
+            : prevState.value - 1
+      }));
+    };
+
+    render() {
+      const { minValue, maxValue, ...props } = this.props;
+      return (
+        <Component
+          {...(props as P)}
+          value={this.state.value}
+          onIncrement={this.increment}
+          onDecrement={this.decrement}
+        />
+      );
+    }
+  };
+
+
+//The component to be wrapped by the HOC
+interface CounterProps extends InjectedCounterProps {
+  style: React.CSSProperties;
+}
+
+type testType = Exclude<CounterProps, InjectedCounterProps>;
+
+const Counter = (props: CounterProps) => (
+  <div style={props.style}>
+    <button onClick={props.onDecrement}> - </button>
+    {props.value}
+    <button onClick={props.onIncrement}> + </button>
+  </div>
+);
+
+const MyCounter = makeCounter(Counter);
+
+const App: React.FC = () => {
+  const divStyle: React.CSSProperties = {
+    backgroundColor: "rgba(255, 255, 255, 0.85)"
+  };
+  return (
+    <div className="App">
+      <MyCounter style={divStyle} minValue={-2} maxValue={5} />
+    </div>
+  );
+};
+*/
+
 /* Higher Order Component (HOC) – Injectors */
 
 /*
-//the props that will be injected into the (wrapped) component
+// the props that will be injected into the component
+// the injected props will then be removed from the wrapped component 
+// so they can no longer be set from the outside
 interface InjectedCounterProps {
   value: number;
   onIncrement(): void;
