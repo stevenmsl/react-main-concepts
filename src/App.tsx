@@ -2,6 +2,27 @@ import React, { Fragment } from "react";
 //import logo from "./logo.svg";
 import "./App.css";
 
+/* Render Props */
+
+interface InjectedCounterProps {
+  value: number;
+  onIncrement(): void;
+  onDecrement(): void;
+}
+
+interface MakeCounterProps {
+  minValue?: number;
+  maxValue?: number;
+  // render prop
+  // states that the component requires a function
+  // passed in that takes in the injected props and returns a JSX element
+  children(props: InjectedCounterProps): JSX.Element;
+}
+
+interface MakeCounterState {
+  value: number;
+}
+
 const App: React.FC = () => {
   const divStyle: React.CSSProperties = {
     backgroundColor: "rgba(255, 255, 255, 0.85)"
