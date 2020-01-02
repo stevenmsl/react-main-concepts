@@ -2,12 +2,104 @@ import React, { Fragment } from "react";
 //import logo from "./logo.svg";
 import "./App.css";
 
+/* Render Props - use HOC to improve wrapped component  */
+
+interface InjectedCounterProps {
+  value: number;
+  onIncrement(): void;
+  onDecrement(): void;
+}
+
+interface MakeCounterProps {
+  minValue?: number;
+  maxValue?: number;
+  children(props: InjectedCounterProps): JSX.Element;
+}
+interface MakeCounterChildrenPropOnly {
+  children(props: InjectedCounterProps): JSX.Element;
+}
+
+// omit the children property from MakeCounterProps
+type MakeCounterHocProps = Pick<
+  MakeCounterProps,
+  Exclude<keyof MakeCounterProps, keyof MakeCounterChildrenPropOnly>
+>;
+
+interface MakeCounterState {
+  value: number;
+}
+class MakeCounter extends React.Component<MakeCounterProps, MakeCounterState> {
+  state: MakeCounterState = {
+    value: 0
+  };
+
+  increment = () => {
+    this.setState(prevState => ({
+      value:
+        prevState.value === this.props.maxValue
+          ? prevState.value
+          : prevState.value + 1
+    }));
+  };
+
+  decrement = () => {
+    this.setState(prevState => ({
+      value:
+        prevState.value === this.props.minValue
+          ? prevState.value
+          : prevState.value - 1
+    }));
+  };
+
+  render() {
+    return this.props.children({
+      value: this.state.value,
+      onIncrement: this.increment,
+      onDecrement: this.decrement
+    });
+  }
+}
+
+const makeCounter = <P extends InjectedCounterProps>(
+  Component: React.ComponentType<P>
+): React.SFC<Pick<P, Exclude<keyof P, keyof InjectedCounterProps>> &
+  MakeCounterHocProps> => ({
+  minValue,
+  maxValue,
+  ...props
+}: MakeCounterHocProps) => (
+  <MakeCounter minValue={minValue} maxValue={maxValue}>
+    {injectedProps => <Component {...(props as P)} {...injectedProps} />}
+  </MakeCounter>
+);
+
+interface CounterProps extends InjectedCounterProps {
+  style: React.CSSProperties;
+}
+const Counter = (props: CounterProps) => {
+  console.log("Counter's props", props);
+  return (
+    <div style={props.style}>
+      <button onClick={props.onDecrement}> - </button>
+      {props.value}
+      <button onClick={props.onIncrement}> + </button>
+    </div>
+  );
+};
+
+// MyCounter Doesn’t have access to the render prop (children) as it has been removed.
+const MyCounter = makeCounter(Counter);
+
 const App: React.FC = () => {
   const divStyle: React.CSSProperties = {
     backgroundColor: "rgba(255, 255, 255, 0.85)"
   };
 
-  return <div className="App"></div>;
+  return (
+    <div className="App">
+      <MyCounter minValue={-6} maxValue={6} style={divStyle} />
+    </div>
+  );
 };
 
 /* Render Props - wrapped component  */
