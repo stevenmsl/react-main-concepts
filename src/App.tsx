@@ -6,9 +6,109 @@ const App: React.FC = () => {
   const divStyle: React.CSSProperties = {
     backgroundColor: "rgba(255, 255, 255, 0.85)"
   };
+
   return <div className="App"></div>;
 };
 
+/* Render Props - wrapped component  */
+/*
+interface InjectedCounterProps {
+  value: number;
+  onIncrement(): void;
+  onDecrement(): void;
+}
+
+interface CounterProps extends InjectedCounterProps {
+  style: React.CSSProperties;
+}
+
+// MakeCounter is no longer backed into Counter
+const Counter = (props: CounterProps) => (
+  <div style={props.style}>
+    <button onClick={props.onDecrement}> - </button>
+    {props.value}
+    <button onClick={props.onIncrement}> + </button>
+  </div>
+);
+
+interface WrappedCounterProps extends CounterProps {
+  minValue?: number;
+  maxValue?: number;
+}
+
+interface MakeCounterProps {
+  minValue?: number;
+  maxValue?: number;
+  children(props: InjectedCounterProps): JSX.Element;
+}
+
+interface MakeCounterState {
+  value: number;
+}
+
+class MakeCounter extends React.Component<MakeCounterProps, MakeCounterState> {
+  state: MakeCounterState = {
+    value: 0
+  };
+
+  increment = () => {
+    this.setState(prevState => ({
+      value:
+        prevState.value === this.props.maxValue
+          ? prevState.value
+          : prevState.value + 1
+    }));
+  };
+
+  decrement = () => {
+    this.setState(prevState => ({
+      value:
+        prevState.value === this.props.minValue
+          ? prevState.value
+          : prevState.value - 1
+    }));
+  };
+
+  render() {
+    return this.props.children({
+      value: this.state.value,
+      onIncrement: this.increment,
+      onDecrement: this.decrement
+    });
+  }
+}
+
+const WrappedCounter = ({
+  minValue,
+  maxValue,
+  ...props
+}: WrappedCounterProps) => (
+  <MakeCounter minValue={minValue} maxValue={maxValue}>
+    {injectedProps => <Counter {...props} {...injectedProps} />}
+  </MakeCounter>
+);
+
+const App: React.FC = () => {
+  const divStyle: React.CSSProperties = {
+    backgroundColor: "rgba(255, 255, 255, 0.85)"
+  };
+
+  // The main drawback here is that WrappedCounter is less convenient to use:
+  // you need to specify dummy values for the injected properties which will never been used.
+  return (
+    <div className="App">
+      <WrappedCounter
+        maxValue={6}
+        minValue={-6}
+        style={divStyle}
+        value={-100} // Will not be used as this taken over by Make Counter and initialized to 0
+        onIncrement={() => {}} // Will not be used
+        onDecrement={() => {}} // Will not be used
+      />
+    </div>
+  );
+};
+*/
 /* Render Props */
 /*
 interface InjectedCounterProps {
@@ -30,6 +130,7 @@ interface MakeCounterState {
   value: number;
 }
 
+// Render Props - Benefits
 // Render Props vs. HOC
 // 1. MakeCounter's own component declaration becomes much simpler
 //    when comparing to the HOC approach:
@@ -63,7 +164,7 @@ class MakeCounter extends React.Component<MakeCounterProps, MakeCounterState> {
   };
 
   render() {
-    // less work here when rendering when comparing to the HOC approach
+    // less work here in rendering when comparing to the HOC approach:
     // no destructuring and object rest/spread needed
     return this.props.children({
       value: this.state.value,
@@ -107,6 +208,7 @@ interface CounterProps2 {
   maxCounterValue?: number;
 }
 
+// Render Props - Issues
 // MakeCounter is now baked into the Counter (Counter2) component rather than wrapping it,
 // making it more difficult to test the two in isolation
 
@@ -117,7 +219,7 @@ const Counter2 = (props: CounterProps2) => (
   >
     {(
       // the props are injected in the render function of component,
-      // you cannot make use of them in the lifecycle methods
+      // you cannot make use of them in the lifecycle methods in Counter2
       injectedProps
     ) => (
       <div>
