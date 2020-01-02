@@ -2,8 +2,15 @@ import React, { Fragment } from "react";
 //import logo from "./logo.svg";
 import "./App.css";
 
-/* Render Props */
+const App: React.FC = () => {
+  const divStyle: React.CSSProperties = {
+    backgroundColor: "rgba(255, 255, 255, 0.85)"
+  };
+  return <div className="App"></div>;
+};
 
+/* Render Props */
+/*
 interface InjectedCounterProps {
   value: number;
   onIncrement(): void;
@@ -23,13 +30,131 @@ interface MakeCounterState {
   value: number;
 }
 
+// Render Props vs. HOC
+// 1. MakeCounter's own component declaration becomes much simpler
+//    when comparing to the HOC approach:
+//    class MakeCounter extends React.Component<
+//    Pick<P, Exclude<keyof P, keyof InjectedCounterProps>> & MakeCounterProps,
+//    MakeCounterState
+//    >
+// 2. It is no longer wrapped in a function as it is no longer a HOC
+
+class MakeCounter extends React.Component<MakeCounterProps, MakeCounterState> {
+  state: MakeCounterState = {
+    value: 0
+  };
+
+  increment = () => {
+    this.setState(prevState => ({
+      value:
+        prevState.value === this.props.maxValue
+          ? prevState.value
+          : prevState.value + 1
+    }));
+  };
+
+  decrement = () => {
+    this.setState(prevState => ({
+      value:
+        prevState.value === this.props.minValue
+          ? prevState.value
+          : prevState.value - 1
+    }));
+  };
+
+  render() {
+    // less work here when rendering when comparing to the HOC approach
+    // no destructuring and object rest/spread needed
+    return this.props.children({
+      value: this.state.value,
+      onIncrement: this.increment,
+      onDecrement: this.decrement
+    });
+  }
+}
+
+interface CounterProps {
+  style: React.CSSProperties;
+  minValue?: number;
+  maxValue?: number;
+}
+
+// Counter needs to tell MakeCounter what its children looks like
+// and how the injected props are used in rendering its children
+// even though Counter is not responsible for providing the values
+// of injected props
+
+const Counter = (props: CounterProps) => (
+  <MakeCounter minValue={props.minValue} maxValue={props.maxValue}>
+    {injectedProps => (
+      <div style={props.style}>
+        <button onClick={injectedProps.onDecrement}> - </button>
+        {injectedProps.value}
+        <button onClick={injectedProps.onIncrement}> + </button>
+      </div>
+    )}
+  </MakeCounter>
+);
+
+// render prop component approach allows
+// for more control over the naming of the props
+// and flexibility in their usage when comparing to HOC approach
+
+interface CounterProps2 {
+  style: React.CSSProperties;
+  value: number;
+  minCounterValue?: number;
+  maxCounterValue?: number;
+}
+
+// MakeCounter is now baked into the Counter (Counter2) component rather than wrapping it,
+// making it more difficult to test the two in isolation
+
+const Counter2 = (props: CounterProps2) => (
+  <MakeCounter
+    minValue={props.minCounterValue}
+    maxValue={props.maxCounterValue}
+  >
+    {(
+      // the props are injected in the render function of component,
+      // you cannot make use of them in the lifecycle methods
+      injectedProps
+    ) => (
+      <div>
+        <div>Some other value: {props.value} </div>
+        <div style={props.style}>
+          <button onClick={injectedProps.onDecrement}> - </button>
+          {injectedProps.value}
+          <button onClick={injectedProps.onIncrement}> + </button>
+        </div>
+        {props.minCounterValue !== undefined ? (
+          <div>Min value: {props.minCounterValue} </div>
+        ) : null}
+        {props.maxCounterValue !== undefined ? (
+          <div>Max value: {props.maxCounterValue} </div>
+        ) : null}
+      </div>
+    )}
+  </MakeCounter>
+);
+
 const App: React.FC = () => {
   const divStyle: React.CSSProperties = {
     backgroundColor: "rgba(255, 255, 255, 0.85)"
   };
-  return <div className="App"></div>;
+  return (
+    <div className="App">
+      <Counter style={divStyle} minValue={-5} maxValue={5} />
+      <Counter2
+        style={divStyle}
+        value={10}
+        minCounterValue={-6}
+        maxCounterValue={6}
+      />
+    </div>
+  );
 };
-
+*/
 /* Higher Order Component (HOC) – Enhance + Inject */
 /*
 interface InjectedCounterProps {
