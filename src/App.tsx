@@ -6,6 +6,79 @@ const App: React.FC = () => {
   return <div className="App"></div>;
 };
 
+/* Effect Hook */
+// Data fetching, setting up a subscription,
+// and manually changing the DOM in React components
+// are all examples of side effects.
+
+/*
+import { useState, useEffect } from "react";
+
+function Example() {
+  const [count, setCount] = useState(0);
+
+  // tell React that your component needs what to do after render.
+  // by default, it runs both after the first render and after every update.
+  // Every time component is re-rendered a different effect
+  // will be scheduled to replace the previous one - the function passed
+  // to useEffect is going to be different on every render
+  useEffect(() => {
+    document.title = `You click ${count} times`;
+  });
+  return (
+    <div>
+      <p> You click {count} times</p>
+      <button onClick={() => setCount(count + 1)}>Click me</button>
+    </div>
+  );
+}
+
+// Using Class
+interface Example2SateType {
+  count: number;
+}
+class Example2 extends React.Component<{}, Example2SateType> {
+  constructor(props: {}) {
+    super(props);
+    this.state = {
+      count: 0
+    };
+  }
+
+  // we typically want to perform our effects after React has updated the DOM.
+  // This is why in React classes, we put side effects
+  // into componentDidMount and componentDidUpdate.
+  // Drawback - we have to duplicate the code between these two lifecycle methods in class.
+  componentDidMount() {
+    document.title = `You clicked ${this.state.count} times`;
+  }
+
+  componentDidUpdate() {
+    document.title = `You clicked ${this.state.count} times`;
+  }
+
+  render() {
+    return (
+      <div>
+        <p> You click {this.state.count} times</p>
+        <button onClick={() => this.setState({ count: this.state.count + 1 })}>
+          Click me
+        </button>
+      </div>
+    );
+  }
+}
+
+const App: React.FC = () => {
+  return (
+    <div className="App">
+      <Example />
+      <Example2 />
+    </div>
+  );
+};
+*/
+
 /* State Hook */
 /*
 // A Hook is a special function that lets you “hook into” React features.
