@@ -2,8 +2,15 @@ import React, { Fragment } from "react";
 //import logo from "./logo.svg";
 import "./App.css";
 
-/* Render Props - use HOC to improve wrapped component  */
+const App: React.FC = () => {
+  const divStyle: React.CSSProperties = {
+    backgroundColor: "rgba(255, 255, 255, 0.85)"
+  };
+  return <div className="App"></div>;
+};
 
+/* Render Props - use HOC to improve wrapped component  */
+/*
 interface InjectedCounterProps {
   value: number;
   onIncrement(): void;
@@ -66,6 +73,8 @@ const makeCounter = <P extends InjectedCounterProps>(
   MakeCounterHocProps> => ({
   minValue,
   maxValue,
+  // When you hover over …pros it appears to be empty.
+  // But the style property is still there, and it’s just isn’t part of the MakeCounterHocProps type
   ...props
 }: MakeCounterHocProps) => (
   <MakeCounter minValue={minValue} maxValue={maxValue}>
@@ -77,7 +86,7 @@ interface CounterProps extends InjectedCounterProps {
   style: React.CSSProperties;
 }
 const Counter = (props: CounterProps) => {
-  console.log("Counter's props", props);
+  console.log("Counter's props", props); // Verify the properties are passing down properly to the Counter
   return (
     <div style={props.style}>
       <button onClick={props.onDecrement}> - </button>
@@ -101,6 +110,7 @@ const App: React.FC = () => {
     </div>
   );
 };
+*/
 
 /* Render Props - wrapped component  */
 /*
