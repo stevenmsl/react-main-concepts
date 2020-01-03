@@ -3,11 +3,79 @@ import React, { Fragment } from "react";
 import "./App.css";
 
 const App: React.FC = () => {
-  const divStyle: React.CSSProperties = {
-    backgroundColor: "rgba(255, 255, 255, 0.85)"
-  };
   return <div className="App"></div>;
 };
+
+/* State Hook */
+/*
+// A Hook is a special function that lets you “hook into” React features.
+// useState is a Hook that lets you add React state to function components.
+// when to use it? If you write a function component
+// and realize you need to add some state to it
+import { useState } from "react";
+
+function Example() {
+  // - count is a state variable preserved by React.
+  // - the only argument to the useState() Hook is the initial state.
+  // - useState returns a pair of values: the current state
+  //   and a function that updates it.
+  const [count, setCount] = useState(0); // array destructuring
+
+  return (
+    <div>
+      <p> You click {count} times</p>
+      <button onClick={() => setCount(count + 1)}>Click me</button>
+    </div>
+  );
+}
+
+// Using Class
+interface Example2SateType {
+  count: number;
+}
+class Example2 extends React.Component<{}, Example2SateType> {
+  constructor(props: {}) {
+    super(props);
+    this.state = {
+      count: 0
+    };
+  }
+
+  render() {
+    return (
+      <div>
+        <p> You click {this.state.count} times</p>
+        <button onClick={() => this.setState({ count: this.state.count + 1 })}>
+          Click me
+        </button>
+      </div>
+    );
+  }
+}
+
+function ExampleWithManyStates() {
+  const [age, setAge] = useState(42);
+  const [fruit, setFruit] = useState("banana");
+  const [todos, setTodos] = useState([{ text: "Learn Hooks" }]);
+  return (
+    <div>
+      <p>
+        Age: {age}, Fruit: {fruit}, Todos:{todos[0].text}
+      </p>
+    </div>
+  );
+}
+
+const App: React.FC = () => {
+  return (
+    <div className="App">
+      <Example />
+      <Example2 />
+      <ExampleWithManyStates />
+    </div>
+  );
+};
+*/
 
 /* Render Props - use HOC to improve wrapped component  */
 /*
