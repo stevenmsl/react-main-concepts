@@ -66,24 +66,33 @@ function TestChatAPI() {
 
 function ServerStatus(props: { id: string }) {
   const [isOnline, setIsOnline] = useState<string | undefined>(undefined);
-  useEffect(() => {
-    function handleStatusChange(online: boolean) {
-      console.log(`Status ${online} received by ${props.id}`);
-      const isOnline = online ? "Online" : "Offline";
-      setIsOnline(isOnline);
-    }
-    chatAPI.subscribeToServerOnlineStatus({
-      id: props.id,
-      func: handleStatusChange
-    });
-
-    return function cleanup() {
-      chatAPI.unsubscribeFromOnlineServerStatus({
+  useEffect(
+    () => {
+      function handleStatusChange(online: boolean) {
+        console.log(`Status ${online} received by ${props.id}`);
+        const isOnline = online ? "Online" : "Offline";
+        // Once event is received the state gets changed.
+        // since React would clean up the previous effects before applying the next effects
+        // cleanup() will be called next and then subscribeToServerOnlineStatus
+        setIsOnline(isOnline);
+      }
+      chatAPI.subscribeToServerOnlineStatus({
         id: props.id,
         func: handleStatusChange
       });
-    };
-  });
+
+      return function cleanup() {
+        chatAPI.unsubscribeFromOnlineServerStatus({
+          id: props.id,
+          func: handleStatusChange
+        });
+      };
+    },
+    // React will skip the effect is the value remain the same
+    // And that also means the re-subscribing (unsubscribe and the subscribe)
+    // won’t happen in the case
+    [isOnline]
+  );
 
   if (isOnline === undefined) {
     return <p>Loading</p>;
