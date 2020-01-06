@@ -2,8 +2,37 @@ import React, { Fragment } from "react";
 //import logo from "./logo.svg";
 import "./App.css";
 
-/* Effect Hook - Effects with Cleanup */
+/* useRef Hook */
 
+import { useRef } from "react";
+
+function TextInputWithFocusButton() {
+  // useRef is like a “box” that can hold a mutable value in its .current property.
+  // useRef will give you the same ref object on every render.
+  const inputEl: React.RefObject<HTMLInputElement> = useRef(null);
+  const onButtonClick = () => {
+    // a common use case is to access a child imperatively:
+    if (inputEl.current !== null) inputEl.current.focus();
+  };
+
+  return (
+    <>
+      <input ref={inputEl} type="text" />
+      <button onClick={onButtonClick}>Focus the input</button>
+    </>
+  );
+}
+
+const App: React.FC = () => {
+  return (
+    <div className="App">
+      <TextInputWithFocusButton />
+    </div>
+  );
+};
+
+/* Effect Hook - Effects with Cleanup */
+/*
 import { useState, useEffect } from "react";
 import { on } from "cluster";
 interface Subscriber {
@@ -109,6 +138,7 @@ const App: React.FC = () => {
     </div>
   );
 };
+*/
 
 /* Effect Hook */
 // Data fetching, setting up a subscription,
