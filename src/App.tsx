@@ -2,8 +2,119 @@ import React, { Fragment } from "react";
 //import logo from "./logo.svg";
 import "./App.css";
 
+/* custom hook */
+
+// A custom Hook is a JavaScript function
+// whose name starts with ”use” and that may call other Hooks.
+
+import { useState, useEffect } from "react";
+interface Subscriber {
+  id: string;
+  func: (online: boolean) => void;
+}
+
+class ChatAPI {
+  private subscribers: Subscriber[] = new Array<Subscriber>();
+  private showLog: boolean = true;
+
+  subscribeToServerOnlineStatus(sub: Subscriber) {
+    const found = this.subscribers.find(s => s.id === sub.id);
+    if (!found) {
+      if (this.showLog) console.log(sub, " subscribed");
+      this.subscribers.push(sub);
+    }
+  }
+
+  unsubscribeFromOnlineServerStatus(sub: Subscriber) {
+    const index = this.subscribers.findIndex(s => s.id === sub.id);
+    if (index > -1) {
+      if (this.showLog) console.log(sub, " unsubscribed");
+      this.subscribers.splice(index, 1);
+    }
+  }
+
+  changeOnlineStatus(online: boolean) {
+    this.subscribers.forEach(s => s.func(online));
+  }
+  setShowLog(showLog: boolean) {
+    this.showLog = showLog;
+  }
+}
+
+const chatAPI = new ChatAPI();
+
+function TestChatAPI() {
+  const sub: Subscriber = {
+    id: "1",
+    func: (online: boolean) => {
+      console.log(`status ${online} received by subscriber 1`);
+    }
+  };
+  return (
+    <React.Fragment>
+      <button onClick={() => chatAPI.subscribeToServerOnlineStatus(sub)}>
+        Subscribe
+      </button>
+      <button onClick={() => chatAPI.unsubscribeFromOnlineServerStatus(sub)}>
+        Unsubscribe
+      </button>
+      <button onClick={() => chatAPI.changeOnlineStatus(true)}>Online </button>
+      <button onClick={() => chatAPI.changeOnlineStatus(false)}>Offline</button>
+      <button onClick={() => chatAPI.setShowLog(true)}>Show Log</button>
+      <button onClick={() => chatAPI.setShowLog(false)}>Don't Show Log</button>
+    </React.Fragment>
+  );
+}
+
+// name of custom hook should start with “use” so React can
+// automatically check for violations of rules of Hooks
+function useServerStatus(id: string): string | null {
+  const [isOnline, setIsOnline] = useState<string | null>(null);
+  useEffect(() => {
+    function handleStatusChange(online: boolean) {
+      console.log(`Status ${online} received by ${id}`);
+      const isOnline = online ? "Online" : "Offline";
+      setIsOnline(isOnline);
+    }
+
+    chatAPI.subscribeToServerOnlineStatus({
+      id: id,
+      func: handleStatusChange
+    });
+
+    return () => {
+      chatAPI.unsubscribeFromOnlineServerStatus({
+        id: id,
+        func: handleStatusChange
+      });
+    };
+  });
+
+  return isOnline;
+}
+
+function ServerStatus(props: { id: string }) {
+  const isOnline = useServerStatus(props.id);
+
+  if (isOnline === null) {
+    return <p>Loading</p>;
+  }
+
+  return <p>Server Status: {isOnline}</p>;
+}
+
+const App: React.FC = () => {
+  return (
+    <div className="App">
+      <ServerStatus id={"server1"} />
+      <TestChatAPI />
+    </div>
+  );
+};
+
 /* useRef Hook */
 
+/*
 import { useRef } from "react";
 
 function TextInputWithFocusButton() {
@@ -30,6 +141,7 @@ const App: React.FC = () => {
     </div>
   );
 };
+*/
 
 /* Effect Hook - Effects with Cleanup */
 /*
