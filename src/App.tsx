@@ -2,8 +2,149 @@ import React, { Fragment } from "react";
 //import logo from "./logo.svg";
 import "./App.css";
 
+/* custom hook - pass information between hooks */
+
+import { useState, useEffect } from "react";
+interface Subscriber {
+  serverId: string;
+  subscriberId: string;
+  func: (online: boolean) => void;
+}
+
+class ReportServerStatusAPI {
+  private subscribers: Subscriber[] = new Array<Subscriber>();
+  private showLog: boolean = true;
+  private servers: { id: string; online: boolean }[] = [
+    { id: "Server 1", online: false },
+    { id: "Server 2", online: false },
+    { id: "Server 3", online: false }
+  ];
+
+  subscribeToServerOnlineStatus(sub: Subscriber) {
+    const found = this.subscribers.find(
+      s => s.subscriberId === sub.subscriberId
+    );
+    if (!found) {
+      if (this.showLog) console.log(sub, " subscribed");
+      this.subscribers.push(sub);
+    }
+  }
+
+  unsubscribeFromOnlineServerStatus(sub: Subscriber) {
+    const index = this.subscribers.findIndex(
+      s => s.subscriberId === sub.subscriberId
+    );
+    if (index > -1) {
+      if (this.showLog) console.log(sub, " unsubscribed");
+      this.subscribers.splice(index, 1);
+    }
+  }
+
+  changeOnlineStatus(serverId: string, online: boolean) {
+    this.servers.filter(s => s.id === serverId).forEach(s => s.online);
+    this.subscribers
+      .filter(s => s.serverId === serverId)
+      .forEach(s => s.func(online));
+  }
+  setShowLog(showLog: boolean) {
+    this.showLog = showLog;
+  }
+}
+
+const reportStatusAPI = new ReportServerStatusAPI();
+
+function TestReportStatusAPI() {
+  const sub: Subscriber = {
+    serverId: "Server 1",
+    subscriberId: "Test 1",
+    func: (online: boolean) => {
+      console.log(`Server 1 status ${online} received by Test 1`);
+    }
+  };
+  return (
+    <React.Fragment>
+      <button
+        onClick={() => reportStatusAPI.subscribeToServerOnlineStatus(sub)}
+      >
+        Subscribe
+      </button>
+      <button
+        onClick={() => reportStatusAPI.unsubscribeFromOnlineServerStatus(sub)}
+      >
+        Unsubscribe
+      </button>
+      <button
+        onClick={() => reportStatusAPI.changeOnlineStatus("Server 1", true)}
+      >
+        Online
+      </button>
+      <button
+        onClick={() => reportStatusAPI.changeOnlineStatus("Server 1", false)}
+      >
+        Offline
+      </button>
+      <button onClick={() => reportStatusAPI.setShowLog(true)}>Show Log</button>
+      <button onClick={() => reportStatusAPI.setShowLog(false)}>
+        Don't Show Log
+      </button>
+    </React.Fragment>
+  );
+}
+
+function useServerStatus(
+  serverId: string,
+  subscriberId: string
+): string | null {
+  const [isOnline, setIsOnline] = useState<string | null>(null);
+  useEffect(() => {
+    function handleStatusChange(online: boolean) {
+      console.log(
+        `${serverId} online status ${online} sent to ${subscriberId}`
+      );
+      const isOnline = online ? "Online" : "Offline";
+      setIsOnline(isOnline);
+    }
+
+    reportStatusAPI.subscribeToServerOnlineStatus({
+      serverId: serverId,
+      subscriberId: subscriberId,
+      func: handleStatusChange
+    });
+
+    return () => {
+      reportStatusAPI.unsubscribeFromOnlineServerStatus({
+        serverId: serverId,
+        subscriberId: subscriberId,
+        func: handleStatusChange
+      });
+    };
+  });
+
+  return isOnline;
+}
+
+function ServerStatus(props: { serverId: string; subscriberId: string }) {
+  const isOnline = useServerStatus(props.serverId, props.subscriberId);
+
+  if (isOnline === null) {
+    return <p>Loading</p>;
+  }
+
+  return <p>Server Status: {isOnline}</p>;
+}
+
+const App: React.FC = () => {
+  return (
+    <div className="App">
+      <ServerStatus serverId={"Server 1"} subscriberId={"Van Office"} />
+      <TestReportStatusAPI />
+    </div>
+  );
+};
+
 /* custom hook */
 
+/*
 // A custom Hook is a JavaScript function
 // whose name starts with ”use” and that may call other Hooks.
 
@@ -111,6 +252,8 @@ const App: React.FC = () => {
     </div>
   );
 };
+
+*/
 
 /* useRef Hook */
 
