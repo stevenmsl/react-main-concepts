@@ -22,11 +22,12 @@ class ReportServerStatusAPI {
 
   subscribeToServerOnlineStatus(sub: Subscriber) {
     const found = this.subscribers.find(
-      s => s.subscriberId === sub.subscriberId
+      s => s.subscriberId === sub.subscriberId && s.serverId === sub.serverId
     );
     if (!found) {
       if (this.showLog) console.log(sub, " subscribed");
       this.subscribers.push(sub);
+      this.notifySubscribers(sub.serverId, sub.subscriberId);
     }
   }
 
@@ -40,12 +41,28 @@ class ReportServerStatusAPI {
     }
   }
 
-  changeOnlineStatus(serverId: string, online: boolean) {
-    this.servers.filter(s => s.id === serverId).forEach(s => s.online);
-    this.subscribers
-      .filter(s => s.serverId === serverId)
-      .forEach(s => s.func(online));
+  private notifySubscribers(serverId: string, subscriberId?: string) {
+    const found = this.servers.find(s => s.id === serverId);
+    if (found) {
+      this.subscribers
+        .filter(s =>
+          subscriberId
+            ? s.serverId === serverId && s.subscriberId === subscriberId
+            : s.serverId === serverId
+        )
+        .forEach(s => s.func(found.online));
+    }
   }
+
+  public changeOnlineStatus(serverId: string, online: boolean) {
+    // set server status
+    this.servers
+      .filter(s => s.id === serverId)
+      .forEach(s => (s.online = online));
+    // notify the subscriber
+    this.notifySubscribers(serverId);
+  }
+
   setShowLog(showLog: boolean) {
     this.showLog = showLog;
   }
@@ -61,6 +78,10 @@ function TestReportStatusAPI() {
       console.log(`Server 1 status ${online} received by Test 1`);
     }
   };
+
+  const serverList = ["Server 1", "Server 2", "Server 3"];
+  const [serverID, setServerID] = useState(serverList[0]);
+
   return (
     <React.Fragment>
       <button
@@ -73,13 +94,23 @@ function TestReportStatusAPI() {
       >
         Unsubscribe
       </button>
+
+      <select value={serverID} onChange={e => setServerID(e.target.value)}>
+        {serverList.map(server => (
+          <option key={server} value={server}>
+            {server}
+          </option>
+        ))}
+        >
+      </select>
+
       <button
-        onClick={() => reportStatusAPI.changeOnlineStatus("Server 1", true)}
+        onClick={() => reportStatusAPI.changeOnlineStatus(serverID, true)}
       >
         Online
       </button>
       <button
-        onClick={() => reportStatusAPI.changeOnlineStatus("Server 1", false)}
+        onClick={() => reportStatusAPI.changeOnlineStatus(serverID, false)}
       >
         Offline
       </button>
@@ -133,10 +164,35 @@ function ServerStatus(props: { serverId: string; subscriberId: string }) {
   return <p>Server Status: {isOnline}</p>;
 }
 
+function ServerPicker() {
+  const serverList = ["Server 1", "Server 2", "Server 3"];
+  const [serverID, setServerID] = useState(serverList[0]);
+  // isServerOnline is pointing to the local state in useServerStatus,
+  // which will be changed according upon receiving events.
+  // It will then trigger the re-rendering of this component.
+  const isServerOnline = useServerStatus(serverID, "serverList");
+
+  return (
+    <>
+      <p> {isServerOnline === null ? "Loading" : isServerOnline} </p>
+      <select value={serverID} onChange={e => setServerID(e.target.value)}>
+        {serverList.map(server => (
+          <option key={server} value={server}>
+            {server}
+          </option>
+        ))}
+        >
+      </select>
+    </>
+  );
+}
+
 const App: React.FC = () => {
   return (
     <div className="App">
       <ServerStatus serverId={"Server 1"} subscriberId={"Van Office"} />
+      <ServerPicker />
+      <p />
       <TestReportStatusAPI />
     </div>
   );
