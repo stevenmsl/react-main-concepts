@@ -1,9 +1,100 @@
-import React, { Fragment } from "react";
+import React, { Fragment, ContextType } from "react";
 //import logo from "./logo.svg";
 import "./App.css";
+import { Theme } from "pretty-format/build/types";
+
+/*  context - dynamic context  */
+
+const themes = {
+  light: {
+    foreground: "#000000",
+    background: "#eeeeee"
+  },
+  dark: {
+    foreground: "#ffffff",
+    background: "#222222"
+  }
+};
+
+interface ThemeType {
+  foreground: string;
+  background: string;
+}
+// create the context and provide a default value
+const ThemeContext = React.createContext<ThemeType>(themes.dark);
+
+// wonder if we can type the props differently other than type it as ‘any’
+// to expose any properties that can be passed on to the wrapped button element
+class ThemedButton extends React.Component<any> {
+  static contextType = ThemeContext; // ThemedButton is default to the dark theme
+  // ! is used to tell the compiler that "context" property cannot be null or undefined here,
+  // so don't complain about the possibility of it being null or undefined.
+  // Removing the exclamation mark and you will see compiler complain right away
+  context!: React.ContextType<typeof ThemeContext>; // so the context is strongly typed
+  render() {
+    let props = this.props;
+    let theme = this.context;
+    return <button {...props} style={{ backgroundColor: theme.background }} />;
+  }
+}
+// ThemedButton is default to the dark theme
+// You can set this inside the ThemedButton as well
+// ThemedButton.contextType = ThemeContext;
+
+interface ToolbarPropsType {
+  changeTheme: () => void;
+}
+
+function Toolbar(props: ToolbarPropsType) {
+  return <ThemedButton onClick={props.changeTheme}>Change Theme</ThemedButton>;
+}
+
+interface ContainerPropsType {}
+interface ContainerStateType {
+  theme: ThemeType;
+}
+
+class Container extends React.Component<
+  ContainerPropsType,
+  ContainerStateType
+> {
+  constructor(props: ContainerPropsType) {
+    super(props);
+    this.state = {
+      theme: themes.light
+    };
+  }
+  toggleTheme = () => {
+    this.setState(state => ({
+      theme: state.theme === themes.dark ? themes.light : themes.dark
+    }));
+  };
+
+  render() {
+    // The theme is stored in the local state of this component
+    // and passed down to the ThemedButton wrapped inside the Toolbar via context
+    return (
+      <>
+        <ThemeContext.Provider value={this.state.theme}>
+          <Toolbar changeTheme={this.toggleTheme} />
+        </ThemeContext.Provider>
+        <ThemedButton>Change Theme 2</ThemedButton>
+      </>
+    );
+  }
+}
+
+const App: React.FC = () => {
+  return (
+    <div className="App">
+      <Container />
+    </div>
+  );
+};
 
 /* custom hook - pass information between hooks */
 
+/*
 import { useState, useEffect } from "react";
 interface Subscriber {
   serverId: string;
@@ -196,7 +287,7 @@ const App: React.FC = () => {
       <TestReportStatusAPI />
     </div>
   );
-};
+}; */
 
 /* custom hook */
 
