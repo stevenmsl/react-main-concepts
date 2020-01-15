@@ -1,10 +1,103 @@
 import React, { Fragment, ContextType } from "react";
 //import logo from "./logo.svg";
 import "./App.css";
-import { Theme } from "pretty-format/build/types";
+
+/*  context - updating context from a nested component  */
+
+const themes = {
+  light: {
+    foreground: "#000000",
+    background: "#eeeeee"
+  },
+  dark: {
+    foreground: "#ffffff",
+    background: "#222222"
+  }
+};
+
+interface ThemeType {
+  foreground: string;
+  background: string;
+}
+
+interface ThemeContextType {
+  theme: ThemeType;
+  toggleTheme: () => void;
+}
+
+const ThemeContext = React.createContext<ThemeContextType>({
+  theme: themes.dark,
+  // pass a function down through the context
+  // to allow consumers to update the context.
+  toggleTheme: () => {}
+});
+
+function ThemeTogglerButton() {
+  // The Theme Toggler Button receives not only the theme
+  // but also a toggleTheme function from the context
+  return (
+    <ThemeContext.Consumer>
+      {({ theme, toggleTheme }) => (
+        <button
+          onClick={toggleTheme}
+          style={{ backgroundColor: theme.background }}
+        >
+          Toggle Theme
+        </button>
+      )}
+    </ThemeContext.Consumer>
+  );
+}
+
+function Content() {
+  return (
+    <div>
+      <ThemeTogglerButton />
+    </div>
+  );
+}
+
+interface ContainerPropsType {}
+
+class Container extends React.Component<ContainerPropsType, ThemeContextType> {
+  constructor(props: ContainerPropsType) {
+    super(props);
+
+    // state also contains the updater function so it will
+    // be passed down into the context provider
+    this.state = {
+      theme: themes.light,
+      toggleTheme: this.toggleTheme
+    };
+  }
+  toggleTheme = () => {
+    this.setState(state => ({
+      theme: state.theme === themes.dark ? themes.light : themes.dark
+    }));
+  };
+
+  render() {
+    // The entire state is passed to the provider
+    return (
+      <>
+        <ThemeContext.Provider value={this.state}>
+          <Content />
+        </ThemeContext.Provider>
+      </>
+    );
+  }
+}
+
+const App: React.FC = () => {
+  return (
+    <div className="App">
+      <Container />
+    </div>
+  );
+};
 
 /*  context - dynamic context  */
-
+/*
 const themes = {
   light: {
     foreground: "#000000",
@@ -91,6 +184,7 @@ const App: React.FC = () => {
     </div>
   );
 };
+*/
 
 /* custom hook - pass information between hooks */
 
