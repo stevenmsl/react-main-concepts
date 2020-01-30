@@ -2,8 +2,69 @@ import React, { Fragment, ContextType } from "react";
 //import logo from "./logo.svg";
 import "./App.css";
 
-/*  context - updating context from a nested component  */
+/* Consuming Multiple Contexts */
 
+const ThemeContext = React.createContext("light");
+interface UserType {
+  name: string;
+}
+const UserContext = React.createContext<UserType>({ name: "Guest" });
+
+interface ContainerPropsType {
+  signedInUser: UserType;
+  theme: string;
+}
+
+class Container extends React.Component<ContainerPropsType, {}> {
+  render() {
+    // provides initial context values
+    const { signedInUser, theme } = this.props;
+    return (
+      <ThemeContext.Provider value={theme}>
+        <UserContext.Provider value={signedInUser}>
+          <Layout />
+        </UserContext.Provider>
+      </ThemeContext.Provider>
+    );
+  }
+}
+
+function Layout() {
+  return (
+    <div>
+      <Content />
+    </div>
+  );
+}
+function Content() {
+  return (
+    // how to consume multiple contexts
+    <ThemeContext.Consumer>
+      {theme => (
+        <UserContext.Consumer>
+          {user => (
+            <>
+              <p> {user.name} </p>
+              <p> {theme} </p>
+            </>
+          )}
+        </UserContext.Consumer>
+      )}
+    </ThemeContext.Consumer>
+  );
+}
+
+const App: React.FC = () => {
+  const user: UserType = { name: "slin" };
+  return (
+    <div className="App">
+      <Container theme="dark" signedInUser={user} />
+    </div>
+  );
+};
+
+/*  context - updating context from a nested component  */
+/*
 const themes = {
   light: {
     foreground: "#000000",
@@ -95,6 +156,7 @@ const App: React.FC = () => {
     </div>
   );
 };
+*/
 
 /*  context - dynamic context  */
 /*
