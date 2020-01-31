@@ -2,8 +2,14 @@ import React, { Fragment, ContextType } from "react";
 //import logo from "./logo.svg";
 import "./App.css";
 
-/* Consuming Multiple Contexts */
+/* Portal event bubbling */
 
+const App: React.FC = () => {
+  return <div className="App"></div>;
+};
+
+/* Consuming Multiple Contexts */
+/*
 const ThemeContext = React.createContext("light");
 interface UserType {
   name: string;
@@ -62,6 +68,7 @@ const App: React.FC = () => {
     </div>
   );
 };
+*/
 
 /*  context - updating context from a nested component  */
 /*
